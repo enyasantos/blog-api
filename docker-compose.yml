@@ -1,0 +1,20 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services:
+
+  blog_api:
+    container_name: blog_api
+    hostname: blog_api
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "0000"
+      POSTGRES_DB: blog-api
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ~/.PostgressData/postgresonly/blog_api:/var/lib/postgresql/data/pgdata
+
+    ports:
+      - 8080:5432

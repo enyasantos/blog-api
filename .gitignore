@@ -1,0 +1,15 @@
+.idea/
+.vscode/
+
+node_modules/
+build/
+
+.env
+
+tmp/
+temp/
+
+uploads/posts/*
+uploads/authors/*
+
+!uploads/authors/user-default.jpg
