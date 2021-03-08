@@ -6,7 +6,8 @@ import postView from "../view/post_view"
 export default {
     async index (_:Request, response: Response) {
         try {
-            const posts = await getRepository(Posts).find()
+            const posts = await getRepository(Posts)
+            .find()
             return response.json(posts)
         } catch {
             return response.status(500).json({ message: "Internal Error"})
@@ -32,7 +33,8 @@ export default {
 
             return response.status(201).json(post)
             
-        } catch {
+        } catch (e){
+            console.log(e);
             return response.status(500).json({ message: "Internal Error"})
         }
     },

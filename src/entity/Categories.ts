@@ -10,8 +10,10 @@ export class Categories{
   @Column()
   name: string
 
-  @OneToMany(type => Posts, category => Categories)
-  posts: Posts
+  @OneToMany(type => Posts, category => Categories, {
+    cascade: true
+  })
+  posts: Posts[]
 
   @CreateDateColumn()
   created_at: Date

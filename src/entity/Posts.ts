@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, Index, RelationId} from "typeorm"
+import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, Index, RelationId, ManyToOne} from "typeorm"
 
 import {Categories} from "./Categories"
 import {Authors} from "./Authors"
@@ -15,14 +15,17 @@ export class Posts {
     @Column("text")
     content: string
 
-    @OneToOne( type => Categories, posts => Posts )
+    @ManyToOne( type => Categories, posts => Posts, {
+        eager: true,
+        cascade: true,
+    })
     @JoinColumn()
     category: Categories
 
-    // @RelationId((category: Categories) => Categories.name)
-    // categoryId: string
-
-    @OneToOne( type => Authors, posts => Posts) 
+    @ManyToOne( type => Authors, posts => Posts, {
+        eager: true,
+        cascade: true,
+    }) 
     @JoinColumn()
     author: Authors
 

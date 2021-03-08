@@ -6,9 +6,12 @@ import { Categories } from "../entity/Categories"
 export default {
   async index(_:Request, response: Response) {
     try {
-      const categories = await getRepository(Categories).find()
+      const categories = await getRepository(Categories)
+      .find()
+
       return response.status(200).json(categories)
-    }  catch {
+    }  catch (e){
+      console.log(e);
       return response.status(500).json({ message: "Internal Error"})
     }
   },

@@ -21,8 +21,10 @@ export class Authors {
   })
   avatar: string
 
-  @OneToMany(type => Posts, author => Authors)
-  posts: Posts
+  @OneToMany(type => Posts, author => Authors, {
+    cascade: true
+  })
+  posts: Posts[]
 
   @CreateDateColumn()
   created_at: Date
