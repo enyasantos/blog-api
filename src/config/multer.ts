@@ -3,11 +3,11 @@ import { resolve } from "path"
 import { randomBytes } from "crypto"
 
 export const multerConfig = {
-    dest: resolve(__dirname, "..", "..", "uploads"),
+    dest: resolve(__dirname, "..", "..", "public"),
     storage: diskStorage({
         destination: (request, file, callback) => {
             const { type } = request.params;
-            callback(null, resolve(__dirname, "..", "..", "uploads", type))
+            callback(null, resolve(__dirname, "..", "..", "public", type))
         },
         filename: (request, file, callback) => {
             randomBytes(16, (error, hash) => {

@@ -2,6 +2,14 @@ import { Request, Response } from "express"
 import { getRepository } from "typeorm"
 import { Posts } from "../entity/Posts"
 import postView from "../view/post_view"
+import DeleteFile from "./utils/deleteFile"
+
+interface Post {
+    image?: string,
+    title: string,
+    content: string,
+    category: (() => string)
+}
 
 export default {
     async index (_:Request, response: Response) {
@@ -33,8 +41,7 @@ export default {
 
             return response.status(201).json(post)
             
-        } catch (e){
-            console.log(e);
+        } catch {
             return response.status(500).json({ message: "Internal Error"})
         }
     },
@@ -42,11 +49,13 @@ export default {
     async destroy (request: Request, response: Response) {
         try {
             const { id } = request.params
+
+            const { image } = await getRepository(Posts).findOne(id)
             const post = await getRepository(Posts).delete(id)
 
             if(post.affected === 1) {
-                await getRepository(Posts).findOne(id)
-                return response.json({ message: "Post removed!"})
+                DeleteFile(image);
+                return response.status(204).json({ message: "Post removed!"})
             }
 
             return response.status(404).json({ message: "Post not found!"})
@@ -78,8 +87,7 @@ export default {
             .getMany();
 
             return response.json(postView.renderMany(posts))
-        } catch (err){
-            console.log(err)
+        } catch {
             return response.status(500).json({ message: "Internal Error"})
         }
     },
@@ -90,35 +98,31 @@ export default {
 
             const {
                 file,
-                body: { title, content, author }
+                body: { title, content, category }
             } = request
 
-            let data: any;
+            const { image } = await getRepository(Posts).findOne(id)
 
-            if(!file)
-                data = {
-                    title,
-                    content,
-                    author,
-                }
-            else    
-                data = {
-                    title,
-                    content,
-                    author,
-                    image: `${type}/${file.filename}`
-                }
+            const data: Post = {
+                title,
+                content,
+                category,
+                image: file ? `${type}/${file.filename}` : image
+            }
 
             const post = await getRepository(Posts).update(id, data)
         
             if(post.affected === 1) {
                 const postUpdated = await getRepository(Posts).findOne(id)
+
+                if(data.image !== image)
+                    DeleteFile(image);
+
                 return response.json(postUpdated)
             }
         
             return response.status(404).json({ message: "Post not found!"})
-        } catch(err) {
-            console.log(err)
+        } catch {
             return response.status(500).json({ message: "Internal Error"})
         }
     },

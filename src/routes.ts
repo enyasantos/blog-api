@@ -17,9 +17,15 @@ routes.delete("/posts/:id", PostsController.destroy)
 routes.patch('/posts/:id', PostsController.visiblePost)
 
 routes.get("/categories", CategoriesController.index);
+routes.get("/categories/:id", CategoriesController.show);
 routes.post("/categories", CategoriesController.create);
+routes.put("/categories/:id", CategoriesController.update)
+routes.delete("/categories/:id", CategoriesController.destroy)
 
 routes.get("/authors", AuthorsController.index)
+routes.get("/authors/:id", AuthorsController.show);
 routes.post("/authors/:type", multer(multerConfig).single('avatar'), AuthorsController.create)
+routes.put("/authors/:type/:id", multer(multerConfig).single('avatar'), AuthorsController.update)
+routes.delete("/authors/:id", AuthorsController.destroy)
 
 export default routes
